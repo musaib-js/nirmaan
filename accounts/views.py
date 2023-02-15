@@ -108,19 +108,21 @@ def doctordashboard(request):
 def bookappointment(request, pk):
     user = request.user
     doctor = Consultant.objects.filter(pk = pk).first()
-    # try:
-    #     if user in Subscribed_Users:
-    #         return redirect('/')
-    # except:
-    form = AppointmentForm(request.POST) 
-    context = {'form':form} 
-    if form.is_valid():  
-        form.save()  
-        messages.success(request, "Appointment Booked Successfully")
-        return redirect('/')  
-    else:
-         messages.error(request, "Fill the form correctly")
-    return render(request, 'bookappointment.html', context)  
+    try:
+        sub_user = Subscribed_Users.objects.get(user = user)
+        if sub_user:
+            form = AppointmentForm(request.POST) 
+            context = {'form':form} 
+            if form.is_valid():  
+                form.save()  
+                messages.success(request, "Appointment Booked Successfully")
+                return redirect('/')  
+            else:
+                 messages.error(request, "Fill the form correctly")
+            return render(request, 'bookappointment.html', context) 
+    except:
+        print("not subscribed")
+        return redirect('/')
 
 def doctors(request):
     consultant = Consultant.objects.all()

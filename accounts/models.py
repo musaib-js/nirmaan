@@ -37,8 +37,8 @@ class Consultant(models.Model):
 class Subscription_Packs(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length = 200)
-    period = models.CharField(max_length = 50)
-    amount = models.IntegerField()
+    period = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField()
     benefits = models.TextField()
     photo = models.ImageField(upload_to = 'media', default = 'one.jpg')
 
@@ -51,12 +51,13 @@ class Subscription_Packs(models.Model):
 class Subscribed_Users(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     subscription_type = models.OneToOneField(Subscription_Packs, on_delete=models.CASCADE, default=None)
+    created_at = models.DateField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = "Subscribed Users"
 
     def __str__(self):
-        return self.user
+        return str(self.user)
     
 
     
